@@ -2,6 +2,7 @@ import requests
 
 class CompareIt:
     _at = '' #accesstoken
+    _endpoint = 'https://dev2.mittsmartahus.se/api/0/'
     _username = ''
     _password = ''
 
@@ -14,7 +15,15 @@ class CompareIt:
         pass
 
     def GetAllEntities(self):
-        pass
+        uri = self._endpoint + 'view/overview'
+
+        headers =  {"Content-Type":"application/json", "Authorization": self._at}
+        response = requests.get(uri, headers = headers)
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return 'error'
 
     def GetEntity(self, uuid):
         pass
@@ -24,5 +33,10 @@ class CompareIt:
 
 class Util:
     @staticmethod
-    def parseValue(value):
+    def parseSetValue(value):
         pass
+
+    @staticmethod
+    def setAccessToken(response):
+        at = 'hej'
+        return 'Bearer ' + at
