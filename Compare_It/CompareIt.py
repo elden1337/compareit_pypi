@@ -22,5 +22,7 @@ class CompareIt:
     def SetEntity(self, uuid, value):
         pass
 
-
-
+class Util:
+    @staticmethod
+    def parseValue(value):
+        pass
