@@ -2,7 +2,7 @@ import requests
 import json
 
 class CompareIt:
-    _at = '' #accesstoken
+    _at = ''
     _endpoint = 'https://dev2.mittsmartahus.se/api/0/'
     _username = ''
     _password = ''
@@ -21,35 +21,62 @@ class CompareIt:
 
     def GetAllEntities(self):
         uri = self._endpoint + 'view/overview'
-
-        if len(self._at) > 1:
-            headers =  {"Content-Type":"application/json", "Authorization": self._at}
-            response = requests.get(uri, headers = headers)
-        else:
-            self.Login()
-            return self.GetAllEntities(self)
-
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return 'Error!'
+        return self.__GetInternal(uri)
 
     def GetEntity(self, uuid):
-        uri = self._endpoint + 'object/'
+        uri = self._endpoint + 'object/' + uuid
+        return self.__GetInternal(uri)
 
+    def __GetInternal(self, uri):
         if len(self._at) > 1:
             headers =  {"Content-Type":"application/json", "Authorization": self._at}
             response = requests.get(uri, headers = headers)
         else:
             self.Login()
-            return self.GetEntity(self, uuid)
+            return self.__GetInternal(uri)
 
         if response.status_code == 200:
-            return response.json()
+            return json.dumps(response.json())
         else:
             return 'Error!'
 
     def SetEntity(self, uuid, value):
+
+        # if(uuentity.type == EntityType.Dimable)
+        #     {
+        #         if (value.ToLower() == "on")
+        #         {
+        #             value = "100";
+        #         }
+        #         else if (value.ToLower() == "off")
+        #         {
+        #             value = "0";
+        #         }
+        #     }
+        #     else if (uuentity.type == EntityType.Binary)
+        #     {
+        #         if (value.ToLower() == "on")
+        #         {
+        #             value = "True";
+        #         }
+        #         else if (value.ToLower() == "off")
+        #         {
+        #             value = "False";
+        #         }
+        #     }
+
+        #     var obj = new UpdateObject(value, uuentity.type, dim);
+        #     var data = JsonConvert.SerializeObject(obj);
+
+        #     var request = new RestRequest("object/" + uuentity.uuid, Method.PUT);
+        #     request.RequestFormat = DataFormat.Json;
+        #     request.AddHeader("Authorization", _accessToken == string.Empty ? Login() : _accessToken);
+        #     IRestResponse response = null;
+
+        #     request.AddJsonBody(data);
+        #     response = _client.Execute(request);
+        #     return response.Content;
+
         pass
 
 class Util:
