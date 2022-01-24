@@ -41,49 +41,22 @@ class CompareIt:
             return 'Error!'
 
     def SetEntity(self, uuid, value):
+        uri = self._endpoint + 'object/' + uuid
 
-        # if(uuentity.type == EntityType.Dimable)
-        #     {
-        #         if (value.ToLower() == "on")
-        #         {
-        #             value = "100";
-        #         }
-        #         else if (value.ToLower() == "off")
-        #         {
-        #             value = "0";
-        #         }
-        #     }
-        #     else if (uuentity.type == EntityType.Binary)
-        #     {
-        #         if (value.ToLower() == "on")
-        #         {
-        #             value = "True";
-        #         }
-        #         else if (value.ToLower() == "off")
-        #         {
-        #             value = "False";
-        #         }
-        #     }
+        if len(self._at) > 1:
+            headers =  {"Content-Type":"application/json", "Authorization": self._at}
+            body = {"target": value}
+            response = requests.put(uri, data=json.dumps(body), headers = headers)
+        else:
+            self.Login()
+            return self.SetEntity(uuid, value)
 
-        #     var obj = new UpdateObject(value, uuentity.type, dim);
-        #     var data = JsonConvert.SerializeObject(obj);
-
-        #     var request = new RestRequest("object/" + uuentity.uuid, Method.PUT);
-        #     request.RequestFormat = DataFormat.Json;
-        #     request.AddHeader("Authorization", _accessToken == string.Empty ? Login() : _accessToken);
-        #     IRestResponse response = null;
-
-        #     request.AddJsonBody(data);
-        #     response = _client.Execute(request);
-        #     return response.Content;
-
-        pass
+        if response.status_code == 200:
+            pass
+        else:
+            raise ValueError("Unable to update "+ uuid + " with value: " + value)
 
 class Util:
-    @staticmethod
-    def parseSetValue(value):
-        pass
-
     @staticmethod
     def setAccessToken(response):
         return 'Bearer ' + response
