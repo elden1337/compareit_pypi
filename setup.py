@@ -1,9 +1,12 @@
 import setuptools
 
 setuptools.setup(
-    name="Compare It Homeline",
-    version="0.0.1",
+    name="homeline",
+    version="0.0.3",
     author="Magnus Eldén",
-    description="",
-    packages=["Compare_It"]
+    description="Wrapper for the Compare It Homeline Api",
+    packages=["Compare_It"],
+    install_requires=[
+          'requests',
+      ],
 )   

@@ -1,3 +1,4 @@
+from multiprocessing import AuthenticationError
 import requests
 import json
 
@@ -16,9 +17,12 @@ class CompareIt:
         postbody = {"username": self._username, "password": self._password}
         headers =  {"Content-Type":"application/json"}
         response = requests.post(uri, data=json.dumps(postbody), headers=headers)
-        self._at = Util.setAccessToken(response.json()['at'])
-        pass
-
+        if response.status_code == 200:
+            self._at = Util.setAccessToken(response.json()['at'])
+            pass
+        else:
+            raise AuthenticationError("Unable to login")
+        
     def GetAllEntities(self):
         uri = self._endpoint + 'view/overview'
         return self.__GetInternal(uri)
