@@ -1,17 +1,21 @@
 from multiprocessing import AuthenticationError
+import time
 import requests
 import json
+
+CALLTIMEOUT = 5
 
 class CompareIt:
     _at = ''
     _endpoint = 'https://dev2.mittsmartahus.se/api/0/'
     _username = ''
     _password = ''
+    _cachedresponse = {}
 
     def __init__(self, username, password):
         self._username = username
         self._password = password
-
+        
     def Login(self):
         uri = self._endpoint + 'user/login'
         postbody = {"username": self._username, "password": self._password}
@@ -25,10 +29,17 @@ class CompareIt:
         
     def GetAllEntities(self):
         uri = self._endpoint + 'view/overview'
-        return self.__GetInternal(uri)
+        return self._GetCached(uri)
 
     def GetEntity(self, uuid):
         uri = self._endpoint + 'object/' + uuid
+        return self.__GetInternal(uri)
+
+    def _GetCached(self, uri) -> str:
+        if uri in self._cachedresponse.keys():
+            if time.time() - self._cachedresponse[uri]["dt"] < CALLTIMEOUT:
+                return self._cachedresponse[uri]["result"]
+        
         return self.__GetInternal(uri)
 
     def __GetInternal(self, uri):
@@ -40,7 +51,12 @@ class CompareIt:
             return self.__GetInternal(uri)
 
         if response.status_code == 200:
-            return json.dumps(response.json())
+            ret = json.dumps(response.json())
+            self._cachedresponse[uri] = {
+                "response" : ret,
+                "dt": time.time()
+            }
+            return ret
         else:
             return 'Error!'
 
