@@ -1,3 +1,4 @@
+from ast import Compare
 from multiprocessing import AuthenticationError
 import time
 import requests
@@ -38,7 +39,7 @@ class CompareIt:
     def _GetCached(self, uri) -> str:
         if uri in self._cachedresponse.keys():
             if time.time() - self._cachedresponse[uri]["dt"] < CALLTIMEOUT:
-                return self._cachedresponse[uri]["result"]
+                return self._cachedresponse[uri]["response"]
         
         return self.__GetInternal(uri)
 
@@ -80,3 +81,4 @@ class Util:
     @staticmethod
     def setAccessToken(response):
         return 'Bearer ' + response
+
