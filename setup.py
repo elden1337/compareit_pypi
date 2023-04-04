@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="homeline",
-    version="1.0.0",
+    version="2.0.3",
     author="Magnus Eldén",
     description="Wrapper for the Compare It Homeline Api",
     packages=["Compare_It"],
